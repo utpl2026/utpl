@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alla tar BP och bevakar alla portar</title>
+
+<style>
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: radial-gradient(circle at top, #0a1630, #050b17);
+    padding: 20px;
+    color: #ffffff;
+}
+
+/* BOTÓN EDITAR */
+.edit-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background: #4fc3ff;
+    color: #000;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.page {
+    background: #0b1628;
+    max-width: 950px;
+    margin: auto;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+h1, h2 {
+    text-align: center;
+    margin: 10px 0;
+    color: #4fc3ff;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 14px;
+    font-size: 14px;
+    background: #0f1f3a;
+}
+
+table, th, td {
+    border: 1px solid #1e3a66;
+}
+
+th {
+    background: #122a4d;
+    color: #ffb300;
+}
+
+td {
+    padding: 6px;
+    vertical-align: top;
+}
+
+.box {
+    background: #0f1f3a;
+    border: 1px solid #1e3a66;
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 14px;
+}
+
+.flex {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.half {
+    flex: 1 1 450px;
+}
+
+.note {
+    font-size: 13px;
+    color: #ffb300;
+}
+
+.name {
+    cursor: pointer;
+    font-weight: bold;
+    color: #4fc3ff;
+    user-select: none;
+}
+
+.highlight-kpk {
+    color: #ffb300;
+    font-weight: bold;
+}
+
+/* ALERTA IMPORTANTE */
+.alert-box {
+    background: linear-gradient(135deg, #3a0f0f, #5c1a1a);
+    border: 2px solid #ff5252;
+    color: #ffb3b3;
+    font-weight: bold;
+}
+
+.alert-box::before {
+    content: "⚠ VIKTIGT";
+    display: block;
+    margin-bottom: 6px;
+    color: #ff5252;
+    font-size: 14px;
+    letter-spacing: 1px;
+}
+
+/* Name picker */
+#namePicker {
+    position: fixed;
+    inset: 0;
+    background: rgba(5,11,23,.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+#namePicker .panel {
+    background: #0b1628;
+    padding: 16px;
+    border-radius: 14px;
+    width: 90%;
+    max-width: 320px;
+}
+
+#nameList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+#nameList button {
+    background: #122a4d;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* visual edición */
+.page [contenteditable="true"] {
+    outline: 1px dashed #4fc3ff;
+}
+</style>
+</head>
+
+<body>
+
+<button class="edit-btn" id="editBtn" onclick="toggleEdit()">Redigera</button>
+
+<div class="page">
+
+<h1>Alla tar BP och bevakar alla portar</h1>
+
+<div class="flex">
+<table class="half">
+<tr><td>Viby</td><td>90</td></tr>
+<tr><td>Special</td><td>94</td></tr>
+<tr><td>KPK</td><td>96</td></tr>
+</table>
+
+<table class="half">
+<tr><th>Följande kunder sorteras vid lossning</th><td>11808</td></tr>
+<tr><td></td><td>12090</td></tr>
+<tr><td></td><td>14040</td></tr>
+<tr><th></th><td>33033</td></tr>
+<tr><td></td><td>15260</td></tr>
+</table>
+</div>
+
+<table>
+<tr><th colspan="2">Prio</th></tr>
+<tr><td>1</td><td>Starta lass åt chaufförer</td></tr>
+<tr><td>2</td><td>Lossa bilar</td></tr>
+<tr><td>3</td><td>Övrigt</td></tr>
+</table>
+
+<div class="box alert-box">
+Vi kör aldrig på bilen/släpet | Vi laddar våra truckar | Vi frågar chauffören om bilen är klossad<br><br>
+Vi ber chauffören som ska lossa att vänta om han är tidig och vi har annat att göra
+</div>
+
+<div class="box">
+Vi rangerar direkt vid passstart och när vi inte har annat att göra
+</div>
+
+<table>
+<tr><th colspan="3">Rangering inkluderar</th></tr>
+<tr>
+<td>Ställ pallar för sig, burar för sig</td>
+<td>Kontrollera att alla etiketter är läsbara i CV</td>
+<td>Dra in och rangera varmfrukt</td>
+</tr>
+<tr>
+<td>Förbereda för BP</td>
+<td>Sortera + Rangera Vändlass</td>
+<td>Säkerställ kundsortering</td>
+</tr>
+<tr>
+<td>Komprimera</td>
+<td>Förskjuta det som behövs</td>
+<td></td>
+</tr>
+</table>
+
+<div class="box">
+Läs alltid OP-trp kommentar. Extra viktigt på Lidingö
+</div>
+
+<table>
+<tr>
+<th>Tomgods</th>
+<td>933 + 981 + 940</td>
+<th>Kontrollera alltid ULV</th>
+</tr>
+<tr>
+<td colspan="3">
+Lämna ca 1200 bur (Full blindgång plus 300 bur)
+</td>
+</tr>
+</table>
+
+<div class="flex">
+
+<table class="half">
+<tr><th colspan="3">Rangera – Höga</th></tr>
+<tr><td>00:30</td><td><span class="name">Namn</span></td><td>Övervolym 12532</td></tr>
+<tr><td>00:30</td><td><span class="name">Namn</span></td><td>Tilldela Port</td></tr>
+<tr><td>01:00</td><td><span class="name">Namn</span></td><td>Tilldela Port</td></tr>
+<tr><td>01:00</td><td><span class="name">Namn</span></td><td></td></tr>
+<tr>
+<td>01:30</td>
+<td><span class="name">Namn</span> / <span class="name">Namn</span></td>
+<td>Service</td>
+</tr>
+<tr>
+<td>02:00</td>
+<td><span class="name">Namn</span> / <span class="name">Namn</span></td>
+<td>Skurning</td>
+</tr>
+</table>
+
+<table class="half">
+<tr><th colspan="3">Rangera – Låga</th></tr>
+<tr><td>00:30</td><td><span class="name">Namn</span></td><td>Tomgods</td></tr>
+<tr><td>00:30</td><td><span class="name">Namn</span></td><td>MinButik / Daglig tillsyn</td></tr>
+<tr><td>01:00</td><td><span class="name">Namn</span></td><td>Tomgods</td></tr>
+<tr><td>01:00</td><td><span class="name">Namn</span></td><td></td></tr>
+<tr><td>01:30</td><td><span class="name">Namn</span></td><td></td></tr>
+<tr><td>01:30</td><td><span class="name">Namn</span></td><td></td></tr>
+<tr><td>02:00</td><td><span class="name">Namn</span></td><td></td></tr>
+</table>
+
+</div>
+
+<h2>Lathund</h2>
+
+<div class="flex">
+<table class="half">
+<tr><th colspan="3">ULV</th></tr>
+<tr><th></th><th>DE</th><th>UO</th></tr>
+<tr><td>Tomgods</td><td>19</td><td>55</td></tr>
+<tr><td>Special</td><td>16</td><td>08</td></tr>
+<tr><td>KPK</td><td>16</td><td>19</td></tr>
+<tr><td>Viby</td><td>12</td><td>19</td></tr>
+<tr><td>CL-Väs</td><td>90</td><td>19</td></tr>
+</table>
+
+<table class="half">
+<tr><th colspan="2">Varuavsnitt</th></tr>
+<tr><td>CL-Väs</td><td>01</td></tr>
+<tr><td>Kallhäll</td><td>06</td></tr>
+<tr><td>Blommor</td><td>10</td></tr>
+<tr><td>ICA-Paket</td><td>31</td></tr>
+<tr><td>Tobak</td><td>33</td></tr>
+<tr><td>Drycker</td><td>35</td></tr>
+<tr><td>Kungälv</td><td>81</td></tr>
+</table>
+</div>
+
+<h2>Lastbilar</h2>
+
+<div class="flex">
+<table class="half">
+<tr><th>IN</th></tr>
+<tr><td>23:45 – <span class="highlight-kpk">Viby</span></td></tr>
+<tr><td>01:45 – <span class="highlight-kpk">Viby</span></td></tr>
+<tr><td>02:45 – <span class="highlight-kpk">Viby</span></td></tr>
+<tr><td>04:15 – <span class="highlight-kpk">Viby</span></td></tr>
+<tr><td>23:59 – 83034 <span class="highlight-kpk">CL-Väs</span></td></tr>
+<tr><td>00:00 – 83024 <span class="highlight-kpk">KPK/CL-Väs</span></td></tr>
+<tr><td>02:00 – 83038 <span class="highlight-kpk">KPK</span> sön-tors</td></tr>
+<tr><td>03:00 – 83035 <span class="highlight-kpk">CL-Väs</span></td></tr>
+<tr><td>03:30 – 83029 <span class="highlight-kpk">CL-Väs</span></td></tr>
+<tr><td>04:00 – 83039 <span class="highlight-kpk">CL-Väs</span></td></tr>
+<tr><td>--:-- – </td></tr>
+</table>
+
+<table class="half">
+<tr><th>UT</th></tr>
+<tr><td>22:00 – <span class="highlight-kpk">Årsta</span></td></tr>
+<tr><td>22:30 – <span class="highlight-kpk">Årsta</span></td></tr>
+<tr><td>23:59 – <span class="highlight-kpk">Årsta</span></td></tr>
+<tr><td>00:30 – <span class="highlight-kpk">Uppsala</span></td></tr>
+<tr><td>01:00 – <span class="highlight-kpk">Uppsala</span></td></tr>
+<tr><td>01:30 – <span class="highlight-kpk">Årsta</span></td></tr>
+<tr><td>02:00 – <span class="highlight-kpk">Årsta</span></td></tr>
+<tr><td>00:30 – </td></tr>
+<tr><td>00:30 – </td></tr>
+<tr><td>01:00 – </td></tr>
+</table>
+</div>
+
+<div class="box note">
+* Antal K-älv och leveranstider kan skilja sig från dag till dag – kontrollera ULC<br>
+Kontrollera alltid lossningstid i ULV/ULC
+</div>
+
+</div>
+
+<div id="namePicker">
+  <div class="panel">
+    <h2>Välj operatör</h2>
+    <div id="nameList"></div>
+    <button onclick="closePicker()">Stäng</button>
+  </div>
+</div>
+
+<script>
+/* EDITAR TODA LA PÁGINA */
+let editing = false;
+
+function toggleEdit() {
+  editing = !editing;
+
+  const els = document.querySelectorAll(
+    '.page td, .page th, .page h1, .page h2, .page .box'
+  );
+
+  els.forEach(el => {
+    if (!el.classList.contains('name')) {
+      el.contentEditable = editing;
+    }
+  });
+
+  document.getElementById('editBtn').textContent =
+    editing ? 'Spara' : 'Redigera';
+}
+
+/* NAME PICKER */
+const workers = ["Namn","Camila","Cristian","Daniel","Dimitri","Emre","Ghazwan","Igor","Jackie","Johan","Jonas","Kubalay","Lars","Malki","Manuel","Micke E","Micke M","Micke T","Mohse","Nur","Pelle","Per","Samir","Sarkis","Shayan","Yunus"];
+let activeTarget = null;
+
+function openPicker(el){
+  activeTarget = el;
+  const list = document.getElementById('nameList');
+  list.innerHTML = '';
+  workers.forEach(n=>{
+    const b = document.createElement('button');
+    b.textContent = n;
+    b.onclick = ()=>selectName(n);
+    list.appendChild(b);
+  });
+  document.getElementById('namePicker').style.display = 'flex';
+}
+
+function selectName(n){
+  if(activeTarget){
+    activeTarget.textContent = n;
+    saveNames();
+  }
+  closePicker();
+}
+
+function closePicker(){
+  document.getElementById('namePicker').style.display = 'none';
+  activeTarget = null;
+}
+
+function saveNames(){
+  const n=[];
+  document.querySelectorAll('.name').forEach((e,i)=>n[i]=e.textContent);
+  localStorage.setItem('nightNames',JSON.stringify(n));
+}
+
+window.onload = ()=>{
+  document.querySelectorAll('.name').forEach(el=>el.onclick=()=>openPicker(el));
+  const n = JSON.parse(localStorage.getItem('nightNames')||'[]');
+  document.querySelectorAll('.name').forEach((el,i)=>{ if(n[i]) el.textContent=n[i]; });
+};
+</script>
+
+</body>
+</html>
