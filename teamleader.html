@@ -168,12 +168,19 @@ Vi ber chauffören som ska lossa att vänta om han är tidig och vi har annat at
 
 <div class="box">Vi rangerar direkt vid passstart och när vi inte har annat att göra</div>
 
+<table>
+<tr><th colspan="3">Rangering inkluderar</th></tr>
+<tr><td>Ställ pallar för sig</td><td>Kontrollera etiketter i CV</td><td>Dra in varmfrukt</td></tr>
+<tr><td>Förbereda BP</td><td>Rangera vändlass</td><td>Säkerställ sortering</td></tr>
+<tr><td>Komprimera</td><td>Förskjut vid behov</td><td></td></tr>
+</table>
+
 <h2>Lastbilar</h2>
 
 <div class="flex">
 <table class="half">
 <tr><th>IN</th></tr>
-<tr><td contenteditable="false">23:45 – Viby</td></tr>
+<tr><td>23:45 – Viby</td></tr>
 <tr><td>01:45 – Viby</td></tr>
 <tr><td>02:45 – Viby</td></tr>
 <tr><td>04:15 – Viby</td></tr>
@@ -191,7 +198,7 @@ Vi ber chauffören som ska lossa att vänta om han är tidig och vi har annat at
 </div>
 
 <div class="box note">
-* Antal och tider kan skilja sig – kontrollera alltid ULC / ULV
+* Antal K-älv och tider kan skilja sig – kontrollera alltid ULC / ULV
 </div>
 
 </div>
@@ -206,82 +213,62 @@ Vi ber chauffören som ska lossa att vänta om han är tidig och vi har annat at
 </div>
 
 <script>
-/* ===== CONFIG ===== */
+/* CONFIG */
 const GITHUB_USER = "utpl2026";
 const REPO = "utpl";
 const TOKEN = "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";
 const FILE = "data.json";
 
-/* ===== CARGAR DESDE SERVIDOR ===== */
+/* LOAD */
 async function cargarServidor(){
   try{
     const r = await fetch("data.json");
     const d = await r.json();
-    if(d.contenido && d.contenido.trim() !== ""){
+    if(d.contenido && d.contenido.trim()!==""){
       document.querySelector(".page").innerHTML = d.contenido;
     }
-  }catch(e){
-    console.log("Sin datos previos");
-  }
+  }catch(e){}
 }
 
-/* ===== EDITAR ===== */
+/* EDIT */
 let editing=false;
-
 function toggleEdit(){
   editing=!editing;
 
   document.querySelectorAll(
     ".page td,.page th,.page h1,.page h2,.page .box"
   ).forEach(el=>{
-    if(!el.classList.contains("name")){
-      el.contentEditable=editing;
-    }
+    el.contentEditable=editing && !el.classList.contains("name");
   });
 
   if(!editing) guardarServidor();
-
-  document.getElementById("editBtn").textContent =
-    editing ? "Spara" : "Redigera";
+  document.getElementById("editBtn").textContent=editing?"Spara":"Redigera";
 }
 
-/* ===== GUARDAR ===== */
+/* SAVE */
 async function guardarServidor(){
-  try{
-    const contenido=document.querySelector(".page").innerHTML;
+  const contenido=document.querySelector(".page").innerHTML;
+  const r=await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,{
+    headers:{Authorization:`token ${TOKEN}`}
+  });
+  const d=await r.json();
 
-    const r=await fetch(
-      `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,
-      {headers:{Authorization:`token ${TOKEN}`}}
-    );
-    const d=await r.json();
-
-    await fetch(
-      `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,
-      {
-        method:"PUT",
-        headers:{
-          Authorization:`token ${TOKEN}`,
-          "Content-Type":"application/json"
-        },
-        body:JSON.stringify({
-          message:"Update",
-          content:btoa(unescape(encodeURIComponent(
-            JSON.stringify({contenido})
-          ))),
-          sha:d.sha
-        })
-      }
-    );
-
-    alert("Guardado y publicado ✅");
-  }catch(e){
-    alert("Error al guardar ❌");
-    console.error(e);
-  }
+  await fetch(`https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,{
+    method:"PUT",
+    headers:{
+      Authorization:`token ${TOKEN}`,
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      message:"Update",
+      content:btoa(unescape(encodeURIComponent(JSON.stringify({contenido})))),
+      sha:d.sha
+    })
+  });
+  alert("Guardado y publicado ✅");
 }
 
-/* ===== NAME PICKER ===== */
+/* NAME PICKER */
 const workers=["Namn","Camila","Cristian","Daniel","Dimitri","Emre","Ghazwan","Igor","Jackie","Johan","Jonas","Kubalay","Lars","Malki","Manuel","Micke E","Micke M","Micke T","Mohse","Nur","Pelle","Per","Samir","Sarkis","Shayan","Yunus"];
 let activeTarget=null;
 
@@ -290,7 +277,8 @@ function openPicker(el){
   const l=document.getElementById("nameList");
   l.innerHTML="";
   workers.forEach(n=>{
-    const b=document.createElement("button");
+    const b=document.createElement("bu
+                                   tton");
     b.textContent=n;
     b.onclick=()=>{activeTarget.textContent=n;closePicker();};
     l.appendChild(b);
@@ -305,11 +293,9 @@ function closePicker(){
 
 window.onload=()=>{
   cargarServidor();
-  document.querySelectorAll(".name")
-    .forEach(el=>el.onclick=()=>openPicker(el));
+  document.querySelectorAll(".name").forEach(el=>el.onclick=()=>openPicker(el));
 };
 </script>
 
 </body>
 </html>
-
