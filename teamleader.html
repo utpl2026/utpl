@@ -342,6 +342,34 @@ Kontrollera alltid lossningstid i ULV/ULC
 </div>
 
 <script>
+
+    <script>
+/* ===== PASO 2: CARGAR DESDE data.json ===== */
+async function cargarDesdeServidor() {
+  try {
+    const res = await fetch("data.json");
+    const data = await res.json();
+
+    if (data.contenido && data.contenido.trim() !== "") {
+      document.querySelector(".page").innerHTML = data.contenido;
+    }
+  } catch (e) {
+    console.log("No hay datos guardados aún, usando HTML base");
+  }
+}
+
+/* mantener name picker después de cargar */
+function reactivarNombres() {
+  document.querySelectorAll('.name')
+    .forEach(el => el.onclick = () => openPicker(el));
+}
+
+window.addEventListener("load", async () => {
+  await cargarDesdeServidor();
+  reactivarNombres();
+});
+</script>
+
 /* EDITAR TODA LA PÁGINA */
 let editing = false;
 
@@ -407,3 +435,4 @@ window.onload = ()=>{
 
 </body>
 </html>
+
