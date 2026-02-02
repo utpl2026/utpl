@@ -347,6 +347,49 @@ let editing = false;
 
 function toggleEdit() {
   editing = !editing;
+    <script>
+const GITHUB_USER = "TUUSUARIO";
+const REPO = "utpl";
+const TOKEN = "PEGA_AQUI_TU_TOKEN";
+const FILE = "data.json";
+
+async function guardarServidor() {
+  const contenido = document.querySelector('.page').innerHTML;
+
+  // 1. Leer data.json actual (para obtener SHA)
+  const res = await fetch(
+    `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,
+    {
+      headers: {
+        Authorization: `token ${TOKEN}`
+      }
+    }
+  );
+  const fileData = await res.json();
+
+  // 2. Subir nuevo contenido
+  await fetch(
+    `https://api.github.com/repos/${GITHUB_USER}/${REPO}/contents/${FILE}`,
+    {
+      method: "PUT",
+      headers: {
+        Authorization: `token ${TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        message: "Actualización turno",
+        content: btoa(unescape(encodeURIComponent(
+          JSON.stringify({ contenido })
+        ))),
+        sha: fileData.sha
+      })
+    }
+  );
+
+  alert("Guardado y publicado ✅");
+}
+</script>
+
 
   const els = document.querySelectorAll(
     '.page td, .page th, .page h1, .page h2, .page .box'
@@ -357,6 +400,9 @@ function toggleEdit() {
       el.contentEditable = editing;
     }
   });
+if (!editing) {
+  guardarServidor();
+}
 
   document.getElementById('editBtn').textContent =
     editing ? 'Spara' : 'Redigera';
@@ -407,3 +453,4 @@ window.onload = ()=>{
 
 </body>
 </html>
+
