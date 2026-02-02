@@ -260,6 +260,17 @@ Kontrollera alltid lossningstid i ULV/ULC
 </div>
 
 </div>
+<script>
+fetch('data.json')
+  .then(r => r.json())
+  .then(data => {
+    if (data.contenido) {
+      document.querySelector('.page').innerHTML = data.contenido;
+    }
+  });
+</script>
 
+    
 </body>
 </html>
+
